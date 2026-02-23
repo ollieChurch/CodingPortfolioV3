@@ -1,0 +1,71 @@
+[
+    {
+        "title": "Ontime Payments Platform",
+        "description": "Senior Software Engineer on a payments platform built with serverless architecture on AWS. Working across the full stack with .NET/C# services, NoSQL databases, and modern cloud infrastructure.",
+        "techTags": [
+            "AWS",
+            "Serverless",
+            ".NET/C#",
+            "NoSQL",
+            "DynamoDB",
+            "Lambda"
+        ],
+        "repoUrl": "",
+        "liveUrl": "",
+        "image": "",
+        "category": "professional"
+    },
+    {
+        "title": "Maxwell Mysteries",
+        "description": "A mystery and puzzle game where players solve clues and unravel stories. Built as an interactive web experience with engaging gameplay mechanics.",
+        "techTags": [
+            "JavaScript",
+            "HTML5",
+            "CSS3",
+            "Game Development"
+        ],
+        "repoUrl": "https://github.com/ollie/maxwell-mysteries",
+        "liveUrl": "https://maxwell-mysteries.netlify.app",
+        "image": "",
+        "category": "side"
+    },
+    {
+        "title": "Director's Portfolio",
+        "description": "A sleek portfolio site for a film director, showcasing their body of work with video reels, project breakdowns, and a clean visual layout.",
+        "techTags": [
+            "React",
+            "Tailwind CSS",
+            "Vite"
+        ],
+        "repoUrl": "https://github.com/ollie/directors-portfolio",
+        "liveUrl": "https://directors-portfolio.netlify.app",
+        "image": "",
+        "category": "side"
+    },
+    {
+        "title": "Actor's Portfolio",
+        "description": "A personal portfolio site from Ollie's previous career in acting, featuring headshots, showreel, and performance credits.",
+        "techTags": [
+            "Vue",
+            "CSS3",
+            "Netlify"
+        ],
+        "repoUrl": "https://github.com/ollie/actors-portfolio",
+        "liveUrl": "https://actors-portfolio.netlify.app",
+        "image": "",
+        "category": "side"
+    },
+    {
+        "title": "Task Glitch",
+        "description": "A task management app with a playful twist. Organise your to-dos with a clean interface and quirky interactions.",
+        "techTags": [
+            "TypeScript",
+            "React",
+            "Node.js"
+        ],
+        "repoUrl": "https://github.com/ollie/task-glitch",
+        "liveUrl": "https://task-glitch.netlify.app",
+        "image": "",
+        "category": "side"
+    }
+]

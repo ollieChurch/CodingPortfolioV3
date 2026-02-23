@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+@theme {
+    --color-bg-dark: #1e1f26;
+    --color-bg-dark-card: #262730;
+    --color-bg-dark-surface: #2a2b36;
+    --color-purple: #6a2fb8;
+    --color-purple-light: #8b5cf6;
+    --color-cyan: #38efdc;
+    --color-cyan-light: #5ff5e6;
+}

@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import projects from '../content/projects/projects.json';
+
+const professional = projects.filter((p) => p.category === 'professional');
+const side = projects.filter((p) => p.category === 'side');
+---
+
+<BaseLayout title="Work // Ollie" description="Professional work and side projects by Ollie.">
+  <section class="mx-auto max-w-4xl px-4 py-12">
+    <h1 class="text-2xl font-bold text-[var(--color-cyan)] sm:text-3xl">work</h1>
+
+    <h2 class="mt-10 font-mono text-lg text-gray-400">day_job</h2>
+    <div class="mt-4 grid gap-6 sm:grid-cols-2">
+      {professional.map((project) => (
+        <ProjectCard
+          title={project.title}
+          description={project.description}
+          techTags={project.techTags}
+          repoUrl={project.repoUrl}
+          liveUrl={project.liveUrl}
+          image={project.image}
+        />
+      ))}
+    </div>
+
+    <h2 class="mt-12 font-mono text-lg text-gray-400">side_projects</h2>
+    <div class="mt-4 grid gap-6 sm:grid-cols-2">
+      {side.map((project) => (
+        <ProjectCard
+          title={project.title}
+          description={project.description}
+          techTags={project.techTags}
+          repoUrl={project.repoUrl}
+          liveUrl={project.liveUrl}
+          image={project.image}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

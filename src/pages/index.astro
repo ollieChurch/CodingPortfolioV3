@@ -1,0 +1,346 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Timeline from '../components/Timeline.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+import { getLatestPosts } from '../data/posts';
+
+const posts = await getCollection('blog');
+const latestPosts = getLatestPosts(posts, 2);
+
+const timelineEntries = [
+  {
+    year: '2016',
+    title: 'Graduated from Guildford School of Acting',
+    description: 'Three years of drama school, then a few years of acting, odd jobs, and figuring out what came next.',
+  },
+  {
+    year: '2018',
+    title: 'Escape Room Manager',
+    description: 'Started managing an escape room. Built electronics, designed puzzles, and discovered I really liked solving problems.',
+  },
+  {
+    year: '2020',
+    title: 'Furloughed. Started Learning Web Development.',
+    description: 'The pandemic hit, and suddenly there was time. Picked up web development full-time and never looked back.',
+  },
+  {
+    year: '2022',
+    title: 'Career Transition. Junior Developer.',
+    description: 'Made the leap into software development professionally.',
+  },
+  {
+    year: '2023',
+    title: 'Mid-Level Developer',
+    description: 'Promoted and taking on more ownership across the stack.',
+  },
+  {
+    year: '2024',
+    title: 'Senior Software Engineer, Ontime Payments',
+    description: 'Building payments infrastructure with serverless and .NET on AWS.',
+  },
+];
+
+const techStack = ['AWS', 'Serverless', '.NET/C#', 'NoSQL', 'DynamoDB', 'Lambda', 'TypeScript', 'Vue', 'React'];
+---
+
+<BaseLayout title="Ollie Church // Senior Software Engineer">
+  <!-- Hero -->
+  <section class="mx-auto max-w-4xl px-4 pt-16 pb-12">
+    <div class="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
+      <div>
+        <h1 class="text-4xl font-bold text-[var(--color-cyan)] sm:text-5xl">Ollie Church</h1>
+        <p class="mt-3 text-xl text-gray-300">Senior Software Engineer at Ontime Payments</p>
+        <p class="mt-2 text-gray-400">Building payments infrastructure with serverless and .NET on AWS.</p>
+      </div>
+      <div class="flex h-48 w-48 shrink-0 items-center justify-center rounded-xl border-2 border-dashed border-[var(--color-bg-dark-card)] bg-[var(--color-bg-dark-surface)]">
+        <p class="text-xs text-gray-500 font-mono">photo coming soon</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech stack -->
+  <section class="mx-auto max-w-4xl px-4 pb-12">
+    <h2 class="font-mono text-lg text-gray-400">stack</h2>
+    <div class="mt-4 flex flex-wrap gap-2">
+      {techStack.map((tech) => (
+        <span class="rounded-full border border-[var(--color-bg-dark-card)] bg-[var(--color-bg-dark-surface)] px-3 py-1 text-sm text-[var(--color-cyan)] transition-colors hover:border-[var(--color-purple)]">
+          {tech}
+        </span>
+      ))}
+    </div>
+  </section>
+
+  <!-- Career Timeline -->
+  <section class="mx-auto max-w-4xl px-4 pb-12">
+    <h2 class="font-mono text-lg text-gray-400">career</h2>
+    <div class="mt-6">
+      <Timeline entries={timelineEntries} />
+    </div>
+  </section>
+
+  <!-- Off Duty -->
+  <section class="mx-auto max-w-4xl px-4 pb-12">
+    <h2 class="font-mono text-lg text-gray-400">off_duty</h2>
+    <div class="mt-4 flex flex-col md:flex-row gap-4 md:gap-10">
+      <!-- Description (mobile: first, desktop: right) -->
+      <div class="flex flex-col justify-center gap-3 order-1 md:order-3">
+        <p class="font-mono text-xs text-[var(--color-purple-light)] uppercase tracking-wider">away from the keyboard</p>
+        <p class="text-sm leading-relaxed text-gray-400">
+          When I'm not writing code, you'll probably find me deep in a <em class="text-gray-200 not-italic font-medium">board game</em>, 
+          hunting for the next great <em class="text-gray-200 not-italic font-medium">escape room</em>,
+          planning the next <em class="text-gray-200 not-italic font-medium">trip abroad</em>, 
+          or losing hours to whatever <em class="text-gray-200 not-italic font-medium">video game</em> has its hooks in me. 
+          There's always <em class="text-gray-200 not-italic font-medium">music</em> on, 
+          and I drink far too much <em class="text-gray-200 not-italic font-medium">tea</em>.
+        </p>
+        <p class="text-xs text-gray-500 italic">Match three reels to find out more.</p>
+      </div>
+      <!-- Slot machine + fact (mobile: stacked below description, desktop: left column) -->
+      <div class="flex flex-col gap-3 shrink-0 order-2 md:order-1">
+        <!-- Fact display -->
+        <div id="fact-box" class="flex items-center gap-4 rounded-xl border border-[var(--color-bg-dark-card)] bg-[var(--color-bg-dark-surface)] p-4 md:w-0 md:min-w-full">
+          <span id="fact-emoji" class="text-4xl shrink-0">🎰</span>
+          <div class="min-w-0">
+            <p id="fact-label" class="text-sm font-semibold text-[var(--color-cyan)]">No match yet</p>
+            <p id="fact-detail" class="mt-0.5 text-xs leading-relaxed text-gray-400 min-h-[2.4375rem]">Line up three of a kind to unlock a fact.</p>
+          </div>
+        </div>
+        <!-- Reels + spin button -->
+        <div id="slot-row" class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+          <div class="flex gap-1.5 rounded-xl border border-[var(--color-purple)]/40 bg-[var(--color-bg-dark)] p-2 w-full sm:w-auto justify-center">
+            <div class="h-20 w-20 flex-1 sm:flex-none sm:h-24 sm:w-24 overflow-hidden rounded-lg bg-[var(--color-bg-dark-surface)]">
+              <div id="reel-0" class="text-5xl sm:text-6xl leading-[80px] sm:leading-[96px] text-center">🎮</div>
+            </div>
+            <div class="h-20 w-20 flex-1 sm:flex-none sm:h-24 sm:w-24 overflow-hidden rounded-lg bg-[var(--color-bg-dark-surface)]">
+              <div id="reel-1" class="text-5xl sm:text-6xl leading-[80px] sm:leading-[96px] text-center">🎲</div>
+            </div>
+            <div class="h-20 w-20 flex-1 sm:flex-none sm:h-24 sm:w-24 overflow-hidden rounded-lg bg-[var(--color-bg-dark-surface)]">
+              <div id="reel-2" class="text-5xl sm:text-6xl leading-[80px] sm:leading-[96px] text-center">☕</div>
+            </div>
+          </div>
+          <button
+            id="slot-spin"
+            class="cursor-pointer rounded-lg border border-[var(--color-purple)] bg-[var(--color-bg-dark-surface)] py-2.5 sm:py-0 sm:self-stretch sm:px-4 font-mono text-sm text-[var(--color-purple-light)] transition-all hover:bg-[var(--color-purple)] hover:text-white active:scale-95 w-full sm:w-auto"
+          >
+            spin
+          </button>
+        </div>
+      </div>
+    </div>
+    <canvas id="confetti-canvas" class="pointer-events-none fixed inset-0 z-50 h-full w-full" style="display:none;"></canvas>
+  </section>
+
+  <!-- Off Duty Script -->
+  <script is:inline>
+    (function() {
+      var slots = [
+        { emoji: '🎮', facts: [
+          { label: 'Playing now', detail: 'Balatro has completely taken over. The poker-meets-roguelike loop is dangerously addictive.' },
+          { label: 'Most played ever', detail: 'Rocket League. Thousands of hours and I\'m still not as good as I think I am.' }
+        ]},
+        { emoji: '🎲', facts: [
+          { label: 'Most wins', detail: 'Wingspan. Collecting birds shouldn\'t be this competitive but here we are.' },
+          { label: 'My favourite', detail: 'Placeholder. You\'ll have to ask me in person why.' }
+        ]},
+        { emoji: '✈️', facts: [
+          { label: 'Last trip', detail: 'Copenhagen. Great food, great design, very expensive beer.' },
+          { label: 'Next trip', detail: 'Placeholder. Still deciding, but somewhere warm.' },
+          { label: 'Favourite trip', detail: 'Placeholder. Hard to pick just one.' },
+          { label: 'Furthest trip', detail: 'Placeholder. A long way from home.' },
+          { label: 'Favourite UK trip', detail: 'Placeholder. Closer to home but just as good.' }
+        ]},
+        { emoji: '☕', facts: [
+          { label: 'Fuel', detail: 'Tea. Always tea. Builder\'s strength, splash of milk, no sugar.' }
+        ]},
+        { emoji: '🔐', facts: [
+          { label: 'Favourite room', detail: 'Placeholder. The one that made me rethink what an escape room could be.' },
+          { label: 'Rooms played', detail: '125 escape rooms across X countries and counting.' },
+          { label: 'Best bit', detail: 'I used to build them too. Designing puzzles is just debugging in reverse.' }
+        ]},
+        { emoji: '🎵', facts: [
+          { label: 'Coding playlist', detail: 'Lo-fi beats or film soundtracks. Anything without lyrics.' },
+          { label: 'Off-duty listening', detail: 'A bit of everything. Lately it\'s been a lot of indie and folk.' }
+        ]}
+      ];
+      var emojis = slots.map(function(s) { return s.emoji; });
+      // Track next fact index per emoji for cycling
+      var nextIndex = {};
+      var seen = {};
+      emojis.forEach(function(e) { nextIndex[e] = 0; seen[e] = false; });
+
+      function weightedPick() {
+        var weights = emojis.map(function(e) { return seen[e] ? 1 : 2; });
+        var total = weights.reduce(function(a, b) { return a + b; }, 0);
+        var r = Math.random() * total;
+        for (var i = 0; i < weights.length; i++) {
+          r -= weights[i];
+          if (r <= 0) return i;
+        }
+        return emojis.length - 1;
+      }
+
+      var spinning = false;
+      var spinCount = 0;
+      var hasWon = false;
+      var CELL = window.innerWidth >= 640 ? 96 : 80;
+
+      function getNextFact(emoji) {
+        var slot = slots.find(function(s) { return s.emoji === emoji; });
+        if (!slot) return null;
+        var idx = nextIndex[emoji] % slot.facts.length;
+        nextIndex[emoji] = idx + 1;
+        return { emoji: emoji, label: slot.facts[idx].label, detail: slot.facts[idx].detail };
+      }
+
+      var btn = document.getElementById('slot-spin');
+      var reels = [document.getElementById('reel-0'), document.getElementById('reel-1'), document.getElementById('reel-2')];
+      var factEmoji = document.getElementById('fact-emoji');
+      var factLabel = document.getElementById('fact-label');
+      var factDetail = document.getElementById('fact-detail');
+      var canvas = document.getElementById('confetti-canvas');
+
+      function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+      function spinReel(el, target, count, duration) {
+        // Build a strip: random emojis then the target at the end
+        var items = [];
+        for (var i = 0; i < count; i++) items.push(rand(emojis));
+        items.push(target);
+
+        var html = '';
+        for (var i = 0; i < items.length; i++) {
+          html += '<div style="height:' + CELL + 'px;line-height:' + CELL + 'px;">' + items[i] + '</div>';
+        }
+        el.innerHTML = html;
+
+        // Use Web Animations API for smooth deceleration
+        var dist = (items.length - 1) * CELL;
+        return el.animate(
+          [
+            { transform: 'translateY(0)' },
+            { transform: 'translateY(-' + dist + 'px)' }
+          ],
+          { duration: duration, easing: 'cubic-bezier(0.2, 0.6, 0.3, 1)', fill: 'forwards' }
+        ).finished;
+      }
+
+      function fireConfetti() {
+        var slotRow = document.getElementById('slot-row');
+        var rect = slotRow.getBoundingClientRect();
+        var originX = rect.left + rect.width / 2;
+        var originY = rect.top + rect.height / 2;
+
+        canvas.style.display = 'block';
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        var ctx = canvas.getContext('2d');
+        var colours = ['#6a2fb8', '#8b5cf6', '#38efdc', '#5ff5e6', '#fff'];
+        var particles = [];
+        for (var i = 0; i < 50; i++) {
+          particles.push({
+            x: originX + (Math.random() - 0.5) * 60,
+            y: originY,
+            vx: (Math.random() - 0.5) * 14,
+            vy: -Math.random() * 12 - 3,
+            size: Math.random() * 6 + 2,
+            colour: colours[Math.floor(Math.random() * colours.length)],
+            life: 1
+          });
+        }
+        var frame = 0;
+        (function draw() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          var alive = false;
+          for (var i = 0; i < particles.length; i++) {
+            var p = particles[i];
+            p.x += p.vx; p.y += p.vy; p.vy += 0.35; p.life -= 0.018;
+            if (p.life <= 0) continue;
+            alive = true;
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.colour;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+          }
+          ctx.globalAlpha = 1;
+          if (alive && ++frame < 100) requestAnimationFrame(draw);
+          else canvas.style.display = 'none';
+        })();
+      }
+
+      btn.addEventListener('click', function() {
+        if (spinning) return;
+        spinning = true;
+        spinCount++;
+
+        // First spin always loses, third spin guaranteed win if no win yet, otherwise ~60%
+        var match;
+        if (spinCount === 1) {
+          match = false;
+        } else if (spinCount >= 3 && !hasWon) {
+          match = true;
+        } else {
+          match = Math.random() < 0.6;
+        }
+        var t0, t1, t2;
+        if (match) {
+          var pick = weightedPick();
+          t0 = t1 = t2 = emojis[pick];
+        } else {
+          t0 = rand(emojis); t1 = rand(emojis); t2 = rand(emojis);
+          while (t0 === t1 && t1 === t2) t2 = rand(emojis);
+        }
+
+        // Staggered reels: fast spin, each reel has more items so later ones feel longer
+        var p0 = spinReel(reels[0], t0, 10, 400);
+        var p1 = spinReel(reels[1], t1, 14, 550);
+        var p2 = spinReel(reels[2], t2, 18, 700);
+
+        p2.then(function() {
+          if (t0 === t1 && t1 === t2) {
+            var fact = getNextFact(t0);
+            if (fact) {
+              hasWon = true;
+              seen[t0] = true;
+              factEmoji.textContent = fact.emoji;
+              factLabel.textContent = fact.label;
+              factDetail.textContent = fact.detail;
+              fireConfetti();
+            }
+          }
+          spinning = false;
+        });
+      });
+    })();
+  </script>
+
+  <!-- Latest Posts -->
+  <section class="mx-auto max-w-4xl px-4 pb-12">
+    <h2 class="font-mono text-lg text-gray-400">latest_posts</h2>
+    <div class="mt-6 grid gap-4">
+      {latestPosts.map((post) => (
+        <PostCard
+          title={post.data.title}
+          date={post.data.date}
+          description={post.data.description}
+          tags={post.data.tags}
+          slug={post.id}
+        />
+      ))}
+    </div>
+  </section>
+
+  <!-- Links -->
+  <section class="mx-auto max-w-4xl px-4 pb-16">
+    <h2 class="font-mono text-lg text-gray-400">links</h2>
+    <ul class="mt-4 space-y-2 font-mono text-sm text-gray-300">
+      <li>→ <a href="https://linkedin.com/in/ollie" target="_blank" rel="noopener noreferrer" class="text-[var(--color-purple-light)] hover:text-[var(--color-cyan)]">LinkedIn</a></li>
+      <li>→ <a href="https://github.com/ollie" target="_blank" rel="noopener noreferrer" class="text-[var(--color-purple-light)] hover:text-[var(--color-cyan)]">GitHub</a></li>
+      <li>→ <a href="mailto:olliemchurch@gmail.com" class="text-[var(--color-purple-light)] hover:text-[var(--color-cyan)]">olliemchurch@gmail.com</a></li>
+    </ul>
+  </section>
+
+  <!-- Endnote -->
+  <p class="mx-auto max-w-4xl px-4 pb-8 text-center text-xs text-gray-600">
+    No infinite scroll. You've seen everything.
+  </p>
+</BaseLayout>
