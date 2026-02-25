@@ -136,12 +136,12 @@ const techStack = ['AWS', 'Serverless', '.NET/C#', 'NoSQL', 'TypeScript', 'Vue',
     (function() {
       var slots = [
         { emoji: '🎮', facts: [
-          { label: 'Playing now', detail: 'Arc Raiders. You'll find me taking down Arc rather than other raiders. See you topside.' },
+          { label: 'Playing now', detail: 'Arc Raiders. You\'ll find me taking down Arc rather than other raiders. See you topside.' },
           { label: 'Most played ever', detail: 'Factorio! Let me just sort out the copper plate bottleneck and then... oh god it\'s 3am!' }
         ]},
         { emoji: '🎲', facts: [
           { label: 'Current favourite', detail: 'Quacks of Quedlinburg. Potion making try-your-luck deck builder with the chance to go BANG!' },
-          { label: 'Takes all day', detail: 'Mansions Of Madness. Lovecraftian, story-led, co-operative. You'll go insane or die trying.' }
+          { label: 'Takes all day', detail: 'Mansions Of Madness. Lovecraftian, story-led, co-operative. You\'ll go insane or die trying.' }
         ]},
         { emoji: '✈️', facts: [
           { label: 'Last trip', detail: 'Nepal. Temples, mountains and seeing a leopard in the wild.' },
@@ -153,7 +153,9 @@ const techStack = ['AWS', 'Serverless', '.NET/C#', 'NoSQL', 'TypeScript', 'Vue',
           { label: 'Fuel', detail: 'Tea. Always tea. Builder\'s strength, splash of milk, no sugar.' }
         ]},
         { emoji: '🔐', facts: [
-          { label: 'Favourite escape room', detail: 'Secret Subway by E-Exit in Budapest' },
+          { label: 'Favourite escape room', detail: 'Secret Subway by E-Exit in Budapest. Fun puzzles and a moving escape pod.' },
+          { label: 'Most impressive escape room set', detail: 'Pirate Bay by Mystique Room in Budapest. A 3 story pirate ship!'},
+          { label: 'Escape room win rate', detail: '96.8% success rate and going strong' },
           { label: 'Rooms played', detail: '125 escape rooms across 6 countries and counting.' }
         ]},
         { emoji: '🎵', facts: [
@@ -293,7 +295,7 @@ const techStack = ['AWS', 'Serverless', '.NET/C#', 'NoSQL', 'TypeScript', 'Vue',
         var p1 = spinReel(reels[1], t1, 14, 550);
         var p2 = spinReel(reels[2], t2, 18, 700);
 
-        p2.then(function() {
+        Promise.all([p0, p1, p2]).then(function() {
           if (t0 === t1 && t1 === t2) {
             var fact = getNextFact(t0);
             if (fact) {
@@ -305,6 +307,7 @@ const techStack = ['AWS', 'Serverless', '.NET/C#', 'NoSQL', 'TypeScript', 'Vue',
               fireConfetti();
             }
           }
+        }).catch(function() {}).finally(function() {
           spinning = false;
         });
       });
