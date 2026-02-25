@@ -3,6 +3,7 @@ title: "I Was on the Scrimba Podcast"
 date: 2022-06-28
 description: "I learned to code through Scrimba and made a career switch from acting to software development. They invited me on to talk about how that transition went."
 tags: ["career", "scrimba", "learning", "webdev"]
+published: true
 ---
 
 I recently had the chance to appear on the Scrimba podcast, which felt like a full-circle moment.

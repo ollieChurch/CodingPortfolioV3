@@ -3,12 +3,17 @@
  */
 
 export interface PostLike {
-    data: { date: Date };
+    data: { date: Date; published?: boolean };
+}
+
+/** Filter out unpublished posts. */
+export function filterPublished<T extends PostLike>(posts: T[]): T[] {
+    return posts.filter((p) => p.data.published !== false);
 }
 
 /** Sort posts by date descending (newest first). Returns a new array. */
 export function sortPostsByDateDesc<T extends PostLike>(posts: T[]): T[] {
-    return [...posts].sort(
+    return [...filterPublished(posts)].sort(
         (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
     );
 }
