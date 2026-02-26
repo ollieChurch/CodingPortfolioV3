@@ -49,13 +49,17 @@ const ogImage = new URL('/og-default.png', canonicalUrl.origin).href;
     </footer>
     <script is:inline>
       (function() {
-        var quips = [
-          "No infinite scroll. You've seen everything.",
-          "Built with tea and questionable commit messages.",
-          "This footer was probably vibe coded."
-        ];
-        var el = document.getElementById('footer-quip');
-        if (el) el.textContent = quips[Math.floor(Math.random() * quips.length)];
+        function setQuip() {
+          var quips = [
+            "No infinite scroll. You've seen everything.",
+            "Built with tea and questionable commit messages.",
+            "This footer was probably vibe coded."
+          ];
+          var el = document.getElementById('footer-quip');
+          if (el) el.textContent = quips[Math.floor(Math.random() * quips.length)];
+        }
+        setQuip();
+        document.addEventListener('astro:after-swap', setQuip);
       })();
     </script>
   </body>

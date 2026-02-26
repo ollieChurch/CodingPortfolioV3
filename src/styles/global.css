@@ -7,6 +7,12 @@
         font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         font-size: 16px;
     }
+
+    @media (min-width: 1024px) {
+        html {
+            font-size: 18px;
+        }
+    }
 }
 
 @theme {
