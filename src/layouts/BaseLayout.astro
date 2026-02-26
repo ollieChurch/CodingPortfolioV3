@@ -1,4 +1,5 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
 import Navigation from '../components/Navigation.astro';
 import '../styles/global.css';
 
@@ -35,6 +36,7 @@ const ogImage = new URL('/og-default.png', canonicalUrl.origin).href;
     <meta name="twitter:image" content={ogImage} />
 
     <title>{title}</title>
+    <ViewTransitions />
   </head>
   <body class="flex min-h-screen flex-col bg-[var(--color-bg-dark)] text-gray-100">
     <Navigation />
