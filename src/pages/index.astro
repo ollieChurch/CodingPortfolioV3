@@ -165,153 +165,156 @@ const techStack = ['AWS', 'Serverless', '.NET/C#', 'NoSQL', 'TypeScript', 'Vue',
         ]}
       ];
       var emojis = slots.map(function(s) { return s.emoji; });
-      // Track next fact index per emoji for cycling
-      var nextIndex = {};
-      var seen = {};
-      emojis.forEach(function(e) { nextIndex[e] = 0; seen[e] = false; });
-
-      function weightedPick() {
-        var weights = emojis.map(function(e) { return seen[e] ? 1 : 2; });
-        var total = weights.reduce(function(a, b) { return a + b; }, 0);
-        var r = Math.random() * total;
-        for (var i = 0; i < weights.length; i++) {
-          r -= weights[i];
-          if (r <= 0) return i;
-        }
-        return emojis.length - 1;
-      }
-
-      var spinning = false;
-      var spinCount = 0;
-      var hasWon = false;
-      var CELL = window.innerWidth >= 640 ? 96 : 80;
-
-      function getNextFact(emoji) {
-        var slot = slots.find(function(s) { return s.emoji === emoji; });
-        if (!slot) return null;
-        var idx = nextIndex[emoji] % slot.facts.length;
-        nextIndex[emoji] = idx + 1;
-        return { emoji: emoji, label: slot.facts[idx].label, detail: slot.facts[idx].detail };
-      }
-
-      var btn = document.getElementById('slot-spin');
-      var reels = [document.getElementById('reel-0'), document.getElementById('reel-1'), document.getElementById('reel-2')];
-      var factEmoji = document.getElementById('fact-emoji');
-      var factLabel = document.getElementById('fact-label');
-      var factDetail = document.getElementById('fact-detail');
-      var canvas = document.getElementById('confetti-canvas');
 
       function rand(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 
-      function spinReel(el, target, count, duration) {
-        // Build a strip: random emojis then the target at the end
-        var items = [];
-        for (var i = 0; i < count; i++) items.push(rand(emojis));
-        items.push(target);
+      function initSlotMachine() {
+        var btn = document.getElementById('slot-spin');
+        if (!btn) return;
 
-        var html = '';
-        for (var i = 0; i < items.length; i++) {
-          html += '<div style="height:' + CELL + 'px;line-height:' + CELL + 'px;">' + items[i] + '</div>';
-        }
-        el.innerHTML = html;
+        var reels = [document.getElementById('reel-0'), document.getElementById('reel-1'), document.getElementById('reel-2')];
+        var factEmoji = document.getElementById('fact-emoji');
+        var factLabel = document.getElementById('fact-label');
+        var factDetail = document.getElementById('fact-detail');
+        var canvas = document.getElementById('confetti-canvas');
 
-        // Use Web Animations API for smooth deceleration
-        var dist = (items.length - 1) * CELL;
-        return el.animate(
-          [
-            { transform: 'translateY(0)' },
-            { transform: 'translateY(-' + dist + 'px)' }
-          ],
-          { duration: duration, easing: 'cubic-bezier(0.2, 0.6, 0.3, 1)', fill: 'forwards' }
-        ).finished;
-      }
+        var nextIndex = {};
+        var seen = {};
+        emojis.forEach(function(e) { nextIndex[e] = 0; seen[e] = false; });
 
-      function fireConfetti() {
-        var slotRow = document.getElementById('slot-row');
-        var rect = slotRow.getBoundingClientRect();
-        var originX = rect.left + rect.width / 2;
-        var originY = rect.top + rect.height / 2;
+        var spinning = false;
+        var spinCount = 0;
+        var hasWon = false;
+        var CELL = window.innerWidth >= 640 ? 96 : 80;
 
-        canvas.style.display = 'block';
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        var ctx = canvas.getContext('2d');
-        var colours = ['#6a2fb8', '#8b5cf6', '#38efdc', '#5ff5e6', '#fff'];
-        var particles = [];
-        for (var i = 0; i < 50; i++) {
-          particles.push({
-            x: originX + (Math.random() - 0.5) * 60,
-            y: originY,
-            vx: (Math.random() - 0.5) * 14,
-            vy: -Math.random() * 12 - 3,
-            size: Math.random() * 6 + 2,
-            colour: colours[Math.floor(Math.random() * colours.length)],
-            life: 1
-          });
-        }
-        var frame = 0;
-        (function draw() {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          var alive = false;
-          for (var i = 0; i < particles.length; i++) {
-            var p = particles[i];
-            p.x += p.vx; p.y += p.vy; p.vy += 0.35; p.life -= 0.018;
-            if (p.life <= 0) continue;
-            alive = true;
-            ctx.globalAlpha = p.life;
-            ctx.fillStyle = p.colour;
-            ctx.fillRect(p.x, p.y, p.size, p.size);
+        function weightedPick() {
+          var weights = emojis.map(function(e) { return seen[e] ? 1 : 2; });
+          var total = weights.reduce(function(a, b) { return a + b; }, 0);
+          var r = Math.random() * total;
+          for (var i = 0; i < weights.length; i++) {
+            r -= weights[i];
+            if (r <= 0) return i;
           }
-          ctx.globalAlpha = 1;
-          if (alive && ++frame < 100) requestAnimationFrame(draw);
-          else canvas.style.display = 'none';
-        })();
-      }
-
-      btn.addEventListener('click', function() {
-        if (spinning) return;
-        spinning = true;
-        spinCount++;
-
-        // First spin always loses, third spin guaranteed win if no win yet, otherwise ~60%
-        var match;
-        if (spinCount === 1) {
-          match = false;
-        } else if (spinCount >= 3 && !hasWon) {
-          match = true;
-        } else {
-          match = Math.random() < 0.6;
-        }
-        var t0, t1, t2;
-        if (match) {
-          var pick = weightedPick();
-          t0 = t1 = t2 = emojis[pick];
-        } else {
-          t0 = rand(emojis); t1 = rand(emojis); t2 = rand(emojis);
-          while (t0 === t1 && t1 === t2) t2 = rand(emojis);
+          return emojis.length - 1;
         }
 
-        // Staggered reels: fast spin, each reel has more items so later ones feel longer
-        var p0 = spinReel(reels[0], t0, 10, 400);
-        var p1 = spinReel(reels[1], t1, 14, 550);
-        var p2 = spinReel(reels[2], t2, 18, 700);
+        function getNextFact(emoji) {
+          var slot = slots.find(function(s) { return s.emoji === emoji; });
+          if (!slot) return null;
+          var idx = nextIndex[emoji] % slot.facts.length;
+          nextIndex[emoji] = idx + 1;
+          return { emoji: emoji, label: slot.facts[idx].label, detail: slot.facts[idx].detail };
+        }
 
-        Promise.all([p0, p1, p2]).then(function() {
-          if (t0 === t1 && t1 === t2) {
-            var fact = getNextFact(t0);
-            if (fact) {
-              hasWon = true;
-              seen[t0] = true;
-              factEmoji.textContent = fact.emoji;
-              factLabel.textContent = fact.label;
-              factDetail.textContent = fact.detail;
-              fireConfetti();
+        function spinReel(el, target, count, duration) {
+          var items = [];
+          for (var i = 0; i < count; i++) items.push(rand(emojis));
+          items.push(target);
+
+          var html = '';
+          for (var i = 0; i < items.length; i++) {
+            html += '<div style="height:' + CELL + 'px;line-height:' + CELL + 'px;">' + items[i] + '</div>';
+          }
+          el.innerHTML = html;
+
+          var dist = (items.length - 1) * CELL;
+          return el.animate(
+            [
+              { transform: 'translateY(0)' },
+              { transform: 'translateY(-' + dist + 'px)' }
+            ],
+            { duration: duration, easing: 'cubic-bezier(0.2, 0.6, 0.3, 1)', fill: 'forwards' }
+          ).finished;
+        }
+
+        function fireConfetti() {
+          var slotRow = document.getElementById('slot-row');
+          var rect = slotRow.getBoundingClientRect();
+          var originX = rect.left + rect.width / 2;
+          var originY = rect.top + rect.height / 2;
+
+          canvas.style.display = 'block';
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          var ctx = canvas.getContext('2d');
+          var colours = ['#6a2fb8', '#8b5cf6', '#38efdc', '#5ff5e6', '#fff'];
+          var particles = [];
+          for (var i = 0; i < 50; i++) {
+            particles.push({
+              x: originX + (Math.random() - 0.5) * 60,
+              y: originY,
+              vx: (Math.random() - 0.5) * 14,
+              vy: -Math.random() * 12 - 3,
+              size: Math.random() * 6 + 2,
+              colour: colours[Math.floor(Math.random() * colours.length)],
+              life: 1
+            });
+          }
+          var frame = 0;
+          (function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            var alive = false;
+            for (var i = 0; i < particles.length; i++) {
+              var p = particles[i];
+              p.x += p.vx; p.y += p.vy; p.vy += 0.35; p.life -= 0.018;
+              if (p.life <= 0) continue;
+              alive = true;
+              ctx.globalAlpha = p.life;
+              ctx.fillStyle = p.colour;
+              ctx.fillRect(p.x, p.y, p.size, p.size);
             }
+            ctx.globalAlpha = 1;
+            if (alive && ++frame < 100) requestAnimationFrame(draw);
+            else canvas.style.display = 'none';
+          })();
+        }
+
+        btn.addEventListener('click', function() {
+          if (spinning) return;
+          spinning = true;
+          spinCount++;
+
+          var match;
+          if (spinCount === 1) {
+            match = false;
+          } else if (spinCount >= 3 && !hasWon) {
+            match = true;
+          } else {
+            match = Math.random() < 0.6;
           }
-        }).catch(function() {}).finally(function() {
-          spinning = false;
+          var t0, t1, t2;
+          if (match) {
+            var pick = weightedPick();
+            t0 = t1 = t2 = emojis[pick];
+          } else {
+            t0 = rand(emojis); t1 = rand(emojis); t2 = rand(emojis);
+            while (t0 === t1 && t1 === t2) t2 = rand(emojis);
+          }
+
+          var p0 = spinReel(reels[0], t0, 10, 400);
+          var p1 = spinReel(reels[1], t1, 14, 550);
+          var p2 = spinReel(reels[2], t2, 18, 700);
+
+          Promise.all([p0, p1, p2]).then(function() {
+            if (t0 === t1 && t1 === t2) {
+              var fact = getNextFact(t0);
+              if (fact) {
+                hasWon = true;
+                seen[t0] = true;
+                factEmoji.textContent = fact.emoji;
+                factLabel.textContent = fact.label;
+                factDetail.textContent = fact.detail;
+                fireConfetti();
+              }
+            }
+          }).catch(function() {}).finally(function() {
+            spinning = false;
+          });
         });
-      });
+      }
+
+      initSlotMachine();
+      document.addEventListener('astro:after-swap', initSlotMachine);
     })();
   </script>
 
